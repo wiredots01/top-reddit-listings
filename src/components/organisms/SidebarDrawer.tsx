@@ -1,5 +1,5 @@
-import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, useDisclosure } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
+import React, { useCallback, useRef, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -27,11 +27,6 @@ export const SidebarDrawerComponent: React.FC<SidebarDrawerProps> = ({ loading, 
   const btnRef = useRef(null);
   const [selectedPost, setSelectedPost] = useState<UserPost | null>(null);
 
-  useEffect(() => { 
-    if (posts.length === 0) {
-      loadUserPosts();
-    }
-  }, [loadUserPosts, posts]);
 
   const onSelectPost = (post: UserPost) => {
     setSelectedPost(post);
@@ -48,6 +43,12 @@ export const SidebarDrawerComponent: React.FC<SidebarDrawerProps> = ({ loading, 
     deleteAllUserPosts();
   };
 
+  const fetchUserPost = useCallback(() => { 
+    loadUserPosts();
+  }, [loadUserPosts]);
+
+  const hasPosts = posts.length !== 0;
+  
   return (
     <>
       <Button size="sm" ref={btnRef} onClick={onOpen}>
@@ -64,12 +65,37 @@ export const SidebarDrawerComponent: React.FC<SidebarDrawerProps> = ({ loading, 
           <DrawerCloseButton />
           <DrawerHeader>Top Reddit</DrawerHeader>
 
-          <DrawerBody>
-            <PostList posts={posts} onSelectPost={onSelectPost} onDeletePost={onDeletePost} />
+          <DrawerBody
+            sx={{ 
+              "::-webkit-scrollbar": {
+                display: "none",
+              },
+            }}
+          >
+            {loading ?
+            <Flex width="100%" justifyContent="center">
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="blue.500"
+                size="xl"
+              />
+            </Flex>
+               :
+              <PostList
+                posts={posts}
+                onSelectPost={onSelectPost}
+                onDeletePost={onDeletePost}
+              />
+            }
+            
           </DrawerBody>
 
           <DrawerFooter justifyContent="center">
-            <Button colorScheme="blue" onClick={onDeleteAll}>Dismiss All</Button>
+            <Button colorScheme="blue" size="sm" mt={5} onClick={hasPosts ? onDeleteAll : fetchUserPost}>
+            {hasPosts ? "Dismiss All" : "Reload Data"}
+          </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
