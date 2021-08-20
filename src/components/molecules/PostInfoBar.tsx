@@ -11,6 +11,7 @@ interface PostInfoBarProps {
   onDeletePost: (id: UserPost["id"]) => void;
 }
 
+
 export const PostInfoBar: React.FC<PostInfoBarProps> = ({ post, onSelectPost, onDeletePost }) => {
   const [deleteConfirmation, setDeleteConfirmation ] = useState<boolean>(false);
 
@@ -30,7 +31,15 @@ export const PostInfoBar: React.FC<PostInfoBarProps> = ({ post, onSelectPost, on
   const showDeleteConfirmation = () => setDeleteConfirmation(true);
 
   return (
-    <Box padding={2} onClick={onSelect}>
+    <Box
+      padding={2}
+      onClick={onSelect}
+      background="blackAlpha.700"
+      marginBottom="20px"
+      borderRadius="10px"
+      className="post-box"
+      _hover={{ background: "blackAlpha.100", cursor: 'pointer' }}
+    >
       <Stack direction="row" alignItems="center">
         <Image
           boxSize="150px"
@@ -41,7 +50,7 @@ export const PostInfoBar: React.FC<PostInfoBarProps> = ({ post, onSelectPost, on
         />
         <Stack width="100%" padding="1.5" alignSelf="stretch">
           <Flex justifyContent="space-between">
-            <Text>{post.author}</Text>
+            <Text fontSize="2x1" fontWeight="bold" fontStyle="bold">{post.author}</Text>
             <Text>{moment(post.createdAt).format("LL")}</Text>
           </Flex>
           <Flex flex={1}>
@@ -73,7 +82,7 @@ export const PostInfoBar: React.FC<PostInfoBarProps> = ({ post, onSelectPost, on
         subTitle="Are you sure? You can still get the data back by reloading."
         onClose={onCloseDeleteConfirmation}
       />}
-      
     </Box>
+    
   );
 };

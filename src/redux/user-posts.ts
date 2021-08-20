@@ -14,6 +14,7 @@ export interface UserPost {
 
 interface UserPostsState {
   topPosts: UserPost[];
+  loading: boolean;
 }
 
 interface PostResponseData {
@@ -96,23 +97,32 @@ export const selectRedditTopPosts = (rootState: RootState) => {
   return [...state.topPosts];
 }
 
-const initialState: UserPostsState = {
-  topPosts: [],
+export const selectRedditLoadingPost = (rootState: RootState) => { 
+  const state = selectUserRedditPostState(rootState);
+  return state.loading;
 }
 
-const userPostReducer = (state: UserPostsState = initialState, action: LoadSuccessAction | DeleteRequestAction | DeleteAllRequestAction ) => {
+const initialState: UserPostsState = {
+  topPosts: [],
+  loading: false
+}
+
+const userPostReducer = (state: UserPostsState = initialState, action: LoadSuccessAction | DeleteRequestAction | DeleteAllRequestAction | LoadRequestAction ) => {
   switch (action.type) {
     case LOAD_SUCCESS:
       const { posts } = action.payload;
       return {
         ...state,
         topPosts: [...posts],
+        loading: false
       };
     case DELETE_REQUEST:
       const { id } = action.payload;
       return { ...state, topPosts: state.topPosts.filter(post => post.id !== id) };
     case DELETE_ALL_REQUEST:
-      return {...state, topPosts: []};
+      return { ...state, topPosts: [] };
+    case LOAD_REQUEST:
+      return { ...state, loading: true };
     default:
       return state;
   }

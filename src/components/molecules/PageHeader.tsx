@@ -1,15 +1,17 @@
-import { Flex, Heading, Spacer } from "@chakra-ui/react";
+import { Flex, Heading, Spacer, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
 import { ColorModeSwitcher } from "../atoms";
-
+import { SidebarDrawer } from "../organisms";
 interface PageHeaderProps {
 
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = () => {
+  const [isNotSmallScreen] = useMediaQuery("(min-width: 768px)");
+
   return (
     <Flex width="100%" alignItems="center">
-      <Heading size="md" fontWeight="semibold">Top Reddit</Heading>
+      {isNotSmallScreen ? <Heading size="md" fontWeight="semibold">Top Reddit</Heading> : <SidebarDrawer />}
       <Spacer />
       <ColorModeSwitcher />
     </Flex>

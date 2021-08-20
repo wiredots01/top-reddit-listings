@@ -9,7 +9,7 @@ interface PostDetailsProps {
 export const PostDetails: React.FC<PostDetailsProps> = ({ post }) => {
   
   return (
-    <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
+    <Box maxW="md" borderWidth="1px" borderRadius="lg">
       <Image src={post.thumbnail} width="100%" fallbackSrc="https://via.placeholder.com/500" />
       <Box p="6">
         <Box d="flex" alignItems="baseline">
