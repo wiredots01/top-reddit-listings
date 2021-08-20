@@ -1,42 +1,40 @@
 import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../../redux/store";
-import { deleteAllUserPosts, deleteUserPost, loadUserPosts, selectRedditLoadingPost, selectRedditTopPosts, UserPost } from "../../redux/user-posts";
+import { deleteAllUserPosts, deleteUserPost, loadUserPosts, selectRedditLoadingPost, selectRedditTopPosts, selectSelectedPost, selectUserPost, UserPost } from "../../redux/user-posts";
 import { PostList } from "../organisms";
 
 
 const mapStateToProps = (state: RootState) => ({
   posts: selectRedditTopPosts(state),
-  loading: selectRedditLoadingPost(state)
+  loading: selectRedditLoadingPost(state),
+  selectedPost: selectSelectedPost(state)
 });
 
 const mapDispatchToProps = {
   loadUserPosts,
   deleteUserPost,
-  deleteAllUserPosts
+  deleteAllUserPosts,
+  selectUserPost
 }
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 interface SidebarDrawerProps extends ConnectedProps<typeof connector> {}
 
 
-export const SidebarDrawerComponent: React.FC<SidebarDrawerProps> = ({ loading, loadUserPosts, deleteUserPost, deleteAllUserPosts, posts }) => {
+export const SidebarDrawerComponent: React.FC<SidebarDrawerProps> = ({ selectedPost, selectUserPost, loading, loadUserPosts, deleteUserPost, deleteAllUserPosts, posts }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef(null);
-  const [selectedPost, setSelectedPost] = useState<UserPost | null>(null);
 
 
   const onSelectPost = (post: UserPost) => {
-    setSelectedPost(post);
+    selectUserPost(post);
   }
 
   const onDeletePost = (id: UserPost["id"]) => {
     deleteUserPost(id);
-    if (selectedPost && selectedPost.id === id) {
-      setSelectedPost(posts[0]);
-    }
   }
 
   const onDeleteAll = () => {

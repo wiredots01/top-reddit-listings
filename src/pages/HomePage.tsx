@@ -1,21 +1,23 @@
 import { Box, Button, Flex, Spinner, useMediaQuery } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { PostDetails, PostList } from "../components/organisms";
 import { RootState } from "../redux/store";
-import { deleteAllUserPosts, deleteUserPost, loadUserPosts, selectRedditLoadingPost, selectRedditTopPosts, UserPost } from "../redux/user-posts";
+import { deleteAllUserPosts, deleteUserPost, loadUserPosts, selectRedditLoadingPost, selectRedditTopPosts, selectSelectedPost, selectUserPost, UserPost } from "../redux/user-posts";
 
 
 
 const mapStateToProps = (state: RootState) => ({
   posts: selectRedditTopPosts(state),
-  loading: selectRedditLoadingPost(state)
+  loading: selectRedditLoadingPost(state),
+  selectedPost: selectSelectedPost(state),
 });
 
 const mapDispatchToProps = {
   loadUserPosts,
   deleteUserPost,
-  deleteAllUserPosts
+  deleteAllUserPosts,
+  selectUserPost
 }
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -23,8 +25,7 @@ interface HomePageProps extends ConnectedProps<typeof connector> {}
 
 
 
-const HomePageComponent: React.FC<HomePageProps> = ({ loading, loadUserPosts, deleteUserPost, deleteAllUserPosts, posts }) => {
-  const [selectedPost, setSelectedPost] = useState<UserPost | null>(null);
+const HomePageComponent: React.FC<HomePageProps> = ({ selectedPost, loading, selectUserPost, loadUserPosts, deleteUserPost, deleteAllUserPosts, posts }) => {
   const [isNotSmallScreen] = useMediaQuery("(min-width: 768px)");
   
   useEffect(() => { 
@@ -32,14 +33,11 @@ const HomePageComponent: React.FC<HomePageProps> = ({ loading, loadUserPosts, de
   }, [loadUserPosts]);
 
   const onSelectPost = (post: UserPost) => {
-    setSelectedPost(post);
+    selectUserPost(post);
   }
 
   const onDeletePost = (id: UserPost["id"]) => {
     deleteUserPost(id);
-    if (selectedPost && selectedPost.id === id) {
-      setSelectedPost(posts[0]);
-    }
   }
 
   const fetchUserPost = useCallback(() => { 
@@ -87,7 +85,7 @@ const HomePageComponent: React.FC<HomePageProps> = ({ loading, loadUserPosts, de
       
       
       <Box minWidth={isNotSmallScreen ? "500px": undefined } padding="10px">
-        {posts.length !== 0 && <PostDetails post={selectedPost ? selectedPost : posts[0] } />}
+        {selectedPost && <PostDetails post={selectedPost} />}
       </Box>
     </Flex>
   );
