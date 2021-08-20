@@ -7,6 +7,9 @@ export interface UserPost {
   title: string;
   author: string;
   description: string;
+  totalComments: number;
+  thumbnail: string;
+  createdAt: number;
 }
 
 interface UserPostsState {
@@ -17,7 +20,10 @@ interface PostResponseData {
   id: string;
   title: string;
   author: string;
-  selftext: string | null;
+  selftext: string;
+  num_comments: number;
+  thumbnail: string;
+  created: number;
 }
 interface LoadUserPostResponse {
   data: PostResponseData
@@ -48,10 +54,13 @@ export const loadUserPosts = (): ThunkAction<void, RootState, undefined, LoadReq
 
     const topUserPosts: UserPost[] = responseData.data.children.map((post: LoadUserPostResponse) => {
       return {
-          id: post.data.id,
-          title: post.data.title,
-          author: post.data.author,
-          description: post.data.selftext || ""
+        id: post.data.id,
+        title: post.data.title,
+        author: post.data.author,
+        description: post.data.selftext || "",
+        totalComments: post.data.num_comments,
+        thumbnail: post.data.thumbnail || "",
+        createdAt: post.data.created
       }
     });
     

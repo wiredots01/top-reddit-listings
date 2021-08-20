@@ -1,9 +1,9 @@
 import { Box, Flex } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { PostDetails, PostList } from "../components/organisms";
 import { RootState } from "../redux/store";
-import { loadUserPosts, selectRedditTopPosts } from "../redux/user-posts";
+import { loadUserPosts, selectRedditTopPosts, UserPost } from "../redux/user-posts";
 
 const mapStateToProps = (state: RootState) => ({
   posts: selectRedditTopPosts(state),
@@ -19,16 +19,23 @@ interface HomePageProps extends ConnectedProps<typeof connector> {}
 
 
 const HomePageComponent: React.FC<HomePageProps> = ({ loadUserPosts, posts }) => {
+  const [selectedPost, setSelectedPost] = useState<UserPost | null>(null);
+
   useEffect(() => { 
     loadUserPosts(); 
   }, [loadUserPosts]);
+
+  const onSelectPost = (post: UserPost) => {
+    setSelectedPost(post);
+  }
+
   return (
     <Flex width="100%" alignItems="center" justifyContent="center">
       <Box>
-        <PostList />
+        <PostList posts={posts} onSelectPost={onSelectPost} />
       </Box>
       <Box>
-        <PostDetails />
+        {posts.length !== 0 && <PostDetails post={selectedPost ? selectedPost : posts[0] } />}
       </Box>
     </Flex>
   );

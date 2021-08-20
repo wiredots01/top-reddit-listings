@@ -1,19 +1,20 @@
 import { Badge, Box, Image } from "@chakra-ui/react";
+import moment from "moment";
 import React from "react";
-
+import { UserPost } from "../../redux/user-posts";
 interface PostDetailsProps {
-
+  post: UserPost;
 }
 
-export const PostDetails: React.FC<PostDetailsProps> = () => {
+export const PostDetails: React.FC<PostDetailsProps> = ({ post }) => {
   
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
-      <Image fallbackSrc="https://via.placeholder.com/500" />
+      <Image src={post.thumbnail} width="100%" fallbackSrc="https://via.placeholder.com/500" />
       <Box p="6">
         <Box d="flex" alignItems="baseline">
           <Badge borderRadius="full" px="2" colorScheme="teal">
-            100
+            {post.totalComments}
           </Badge>
           <Box
             fontWeight="hairline"
@@ -33,16 +34,16 @@ export const PostDetails: React.FC<PostDetailsProps> = () => {
           lineHeight="tight"
           isTruncated
         >
-          Test Title
+          {post.title}
         </Box>
 
         <Box>
-          Author Name
+          {post.author}
         </Box>
 
         <Box d="flex" mt="2" alignItems="center">
           <Box as="span" color="gray.600" fontSize="sm">
-            2 hours ago
+            {moment(post.createdAt).format("LL")}
           </Box>
         </Box>
       </Box>
