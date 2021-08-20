@@ -1,5 +1,5 @@
 import { DeleteIcon } from '@chakra-ui/icons';
-import { Badge, Box, Flex, IconButton, Image, Stack, Text, useMediaQuery } from "@chakra-ui/react";
+import { Badge, Box, Flex, IconButton, Image, Stack, Text, useColorMode, useMediaQuery } from "@chakra-ui/react";
 import moment from "moment";
 import React, { useState } from "react";
 import { UserPost } from "../../redux/user-posts";
@@ -15,6 +15,7 @@ interface PostInfoBarProps {
 export const PostInfoBar: React.FC<PostInfoBarProps> = ({ post, onSelectPost, onDeletePost }) => {
   const [deleteConfirmation, setDeleteConfirmation ] = useState<boolean>(false);
   const [isNotSmallScreen] = useMediaQuery("(min-width: 768px)");
+  const { colorMode } = useColorMode()
   const onSelect = () => {
     onSelectPost(post);
   };
@@ -34,7 +35,7 @@ export const PostInfoBar: React.FC<PostInfoBarProps> = ({ post, onSelectPost, on
     <Box
       padding={2}
       onClick={onSelect}
-      background="blackAlpha.700"
+      background={colorMode === "dark" ? "blackAlpha.700": "gray.100" }
       marginBottom="20px"
       borderRadius="10px"
       className="post-box"
