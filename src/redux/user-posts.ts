@@ -81,6 +81,13 @@ export const deleteUserPost = (id: UserPost["id"]): ThunkAction<void, RootState,
   dispatch({ type: DELETE_REQUEST, payload: { id } });
 };
 
+const DELETE_ALL_REQUEST = 'userPosts/delete_all_request';
+interface DeleteAllRequestAction extends Action<typeof DELETE_ALL_REQUEST> {}
+
+export const deleteAllUserPosts = (): ThunkAction<void, RootState, undefined, DeleteAllRequestAction
+> => async(dispatch) => {
+  dispatch({ type: DELETE_ALL_REQUEST });
+};
 
 const selectUserRedditPostState = (rootState: RootState) => rootState.redditPosts;
 
@@ -93,7 +100,7 @@ const initialState: UserPostsState = {
   topPosts: [],
 }
 
-const userPostReducer = (state: UserPostsState = initialState, action: LoadSuccessAction | DeleteRequestAction ) => {
+const userPostReducer = (state: UserPostsState = initialState, action: LoadSuccessAction | DeleteRequestAction | DeleteAllRequestAction ) => {
   switch (action.type) {
     case LOAD_SUCCESS:
       const { posts } = action.payload;
@@ -104,6 +111,8 @@ const userPostReducer = (state: UserPostsState = initialState, action: LoadSucce
     case DELETE_REQUEST:
       const { id } = action.payload;
       return { ...state, topPosts: state.topPosts.filter(post => post.id !== id) };
+    case DELETE_ALL_REQUEST:
+      return {...state, topPosts: []};
     default:
       return state;
   }

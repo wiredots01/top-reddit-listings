@@ -48,4 +48,3 @@ const HomePageComponent: React.FC<HomePageProps> = ({ loadUserPosts, deleteUserP
 
 
 export const HomePage = connector(HomePageComponent);
-
