@@ -45,7 +45,7 @@ interface LoadFailureAction extends Action<typeof LOAD_FAILED> {
 }
 
 export const loadUserPosts = (): ThunkAction<void, RootState, undefined, LoadRequestAction | LoadSuccessAction | LoadFailureAction
-> => async(dispatch, getState) => {
+> => async(dispatch) => {
   dispatch({ type: LOAD_REQUEST });
 
   try {
@@ -71,6 +71,16 @@ export const loadUserPosts = (): ThunkAction<void, RootState, undefined, LoadReq
   }
 };
 
+const DELETE_REQUEST = 'userPosts/delete_request';
+interface DeleteRequestAction extends Action<typeof DELETE_REQUEST> {
+  payload: { id: string }
+}
+
+export const deleteUserPost = (id: UserPost["id"]): ThunkAction<void, RootState, undefined, DeleteRequestAction
+> => async(dispatch) => {
+  dispatch({ type: DELETE_REQUEST, payload: { id } });
+};
+
 
 const selectUserRedditPostState = (rootState: RootState) => rootState.redditPosts;
 
@@ -83,14 +93,17 @@ const initialState: UserPostsState = {
   topPosts: [],
 }
 
-const userPostReducer = (state: UserPostsState = initialState, action: LoadSuccessAction ) => {
+const userPostReducer = (state: UserPostsState = initialState, action: LoadSuccessAction | DeleteRequestAction ) => {
   switch (action.type) {
     case LOAD_SUCCESS:
       const { posts } = action.payload;
       return {
         ...state,
         topPosts: [...posts],
-      }
+      };
+    case DELETE_REQUEST:
+      const { id } = action.payload;
+      return { ...state, topPosts: state.topPosts.filter(post => post.id !== id) };
     default:
       return state;
   }

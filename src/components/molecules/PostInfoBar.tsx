@@ -7,13 +7,18 @@ import { stringLimiter } from "../../utils/helper";
 interface PostInfoBarProps {
   post: UserPost;
   onSelectPost: (post: UserPost) => void;
+  onDeletePost: (id: UserPost["id"]) => void;
 }
 
-export const PostInfoBar: React.FC<PostInfoBarProps> = ({ post, onSelectPost }) => {
+export const PostInfoBar: React.FC<PostInfoBarProps> = ({ post, onSelectPost, onDeletePost }) => {
   
   const onSelect = () => {
     onSelectPost(post);
   };
+
+  const onDelete = () => {
+    onDeletePost(post.id);
+  }
 
   return (
     <Box padding={2} onClick={onSelect}>
@@ -45,7 +50,7 @@ export const PostInfoBar: React.FC<PostInfoBarProps> = ({ post, onSelectPost }) 
               variant="ghost"
               color="current"
               marginLeft="2"
-              onClick={() => {}}
+              onClick={onDelete}
               icon={<DeleteIcon />}
               aria-label="Dismiss Post"
             />
