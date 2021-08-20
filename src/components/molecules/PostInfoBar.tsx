@@ -1,9 +1,10 @@
 import { DeleteIcon } from '@chakra-ui/icons';
 import { Badge, Box, Flex, IconButton, Image, Stack, Text } from "@chakra-ui/react";
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import { UserPost } from "../../redux/user-posts";
 import { stringLimiter } from "../../utils/helper";
+import { DeleteConfirmation } from "../molecules";
 interface PostInfoBarProps {
   post: UserPost;
   onSelectPost: (post: UserPost) => void;
@@ -11,14 +12,22 @@ interface PostInfoBarProps {
 }
 
 export const PostInfoBar: React.FC<PostInfoBarProps> = ({ post, onSelectPost, onDeletePost }) => {
-  
+  const [deleteConfirmation, setDeleteConfirmation ] = useState<boolean>(false);
+
   const onSelect = () => {
     onSelectPost(post);
   };
 
   const onDelete = () => {
+    setDeleteConfirmation(false);
     onDeletePost(post.id);
   }
+
+  const onCloseDeleteConfirmation = () => {
+    setDeleteConfirmation(false);
+  }
+
+  const showDeleteConfirmation = () => setDeleteConfirmation(true);
 
   return (
     <Box padding={2} onClick={onSelect}>
@@ -50,13 +59,21 @@ export const PostInfoBar: React.FC<PostInfoBarProps> = ({ post, onSelectPost, on
               variant="ghost"
               color="current"
               marginLeft="2"
-              onClick={onDelete}
+              onClick={showDeleteConfirmation}
               icon={<DeleteIcon />}
               aria-label="Dismiss Post"
             />
           </Flex>
         </Stack>
       </Stack>
+      {deleteConfirmation && <DeleteConfirmation
+        show={true}
+        onDelete={onDelete}
+        title="Delete Post"
+        subTitle="Are you sure? You can still get the data back by reloading."
+        onClose={onCloseDeleteConfirmation}
+      />}
+      
     </Box>
   );
 };
