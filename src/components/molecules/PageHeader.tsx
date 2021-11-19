@@ -11,7 +11,7 @@ export const PageHeader: React.FC<PageHeaderProps> = () => {
 
   return (
     <Flex width="100%" alignItems="center">
-      {isNotSmallScreen ? <Heading size="md" fontWeight="semibold">Top Reddit</Heading> : <SidebarDrawer />}
+      {isNotSmallScreen ? <Heading size="md" fontWeight="semibold">Topzz Reddit</Heading> : <SidebarDrawer />}
       <Spacer />
       <ColorModeSwitcher />
     </Flex>

@@ -51,7 +51,7 @@ export const loadUserPosts = (): ThunkAction<void, RootState, undefined, LoadReq
   dispatch({ type: LOAD_REQUEST });
 
   try {
-    const response = await fetch('https://www.reddit.com/r/all/top.json');
+    const response = await fetch('//api.reddit.com/top?limit=50');
     const responseData = await response.json();
 
     const topUserPosts: UserPost[] = responseData.data.children.map((post: LoadUserPostResponse) => {
