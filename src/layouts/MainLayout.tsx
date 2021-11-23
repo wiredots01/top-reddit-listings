@@ -11,7 +11,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     <VStack p={5}>
       <PageHeader />
       {children}
-      
     </VStack>
   );
 };
