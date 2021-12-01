@@ -3,7 +3,6 @@ import React from "react";
 import { PageHeader } from "../components/molecules";
 
 interface MainLayoutProps {
-
 }
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
