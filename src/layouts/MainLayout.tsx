@@ -6,6 +6,7 @@ interface MainLayoutProps {
 }
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+  
   return (
     <VStack p={5}>
       <PageHeader />
